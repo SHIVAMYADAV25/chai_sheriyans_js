@@ -1,0 +1,52 @@
+1) stack:
+it is static memory allocation
+work with primitive value and storing function call mostly follow 
+FIFO method that is first in first out simple and easy to work with
+
+
+code:
+let myYoutubeName = "shivamYadav"; // Primitive type stored in the Stack.
+let anotherName = myYoutubeName;   // A copy of the value is created in the Stack.
+anotherName = "shivyadav";        // Changing the copy does not affect the original.
+
+console.log(myYoutubeName); // Output: shivamyadav (Original value remains unchanged)
+console.log(anotherName);   // Output: shivyadav (Only the copy value is changed)
+
+explanation :
+so the myYoutubeName value is store in stack memory and the copy is given to the anotherName 
+any change in copy that is anotherName is done in that variable ony not the original variable
+
+so in short stack give's the copy of variable then if the copyed variable value is 
+changed then only the copyed variable value is changed not the original one
+
+
+
+2) heap:
+it use dynamic memory allocation
+work with non-primitive value that is object and array
+slower and complex than stack 
+it allow flexible memory allocation
+
+
+code:
+
+let userOne = {         // The reference to this object is stored in the Stack.
+    email: "user@google.com",
+    upi: "user@ybl"
+};                      // The actual object data is stored in the Heap.
+
+let userTwo = userOne;  // userTwo references the same object in the Heap.
+
+userTwo.email = "shiva@google.com"; // Modifying userTwo also affects userOne.
+
+console.log(userOne.email); // Output: shiva@google.com
+console.log(userTwo.email); // Output: shiva@google.com
+
+explanation:
+now u can see that the any change in the copyed variable is reflected into the original variable 
+so the original variable email name was user@gmail.com
+then we copyed the value to userTwo
+then we change the value(email) in userTwo
+it automatically changes the value of original one (userOne)
+
+in short thing like they both are pointing to one data set so Changing any thing will get the change for other too
