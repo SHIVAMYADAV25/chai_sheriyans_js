@@ -44,6 +44,7 @@ function loginUserMessage(username = "sam"){
 
 // using spread operator
 
+// ... is rest and spread operator
 // so in this the val1 and val2 is having 200 and 400 as an value an ...num1 is having 500 and 2000
 function calculateCartPrice(val1, val2, ...num1){
     return num1
