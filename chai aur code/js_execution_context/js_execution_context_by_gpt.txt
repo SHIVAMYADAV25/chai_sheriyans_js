@@ -1,0 +1,204 @@
+🧠 What is Execution Context?
+
+Execution Context means —
+“the environment where your JavaScript code runs and gets executed.”
+
+Whenever you run a JS file, the engine (like V8 in Chrome or Node) creates a box-like environment where all your variables, functions, and logic will live and execute.
+That box is called an Execution Context.
+
+Think of it like:
+
+“Your JS file doesn’t run randomly; it first builds a room for itself to live in — and that room is the Execution Context.”
+
+⚙️ Types of Execution Contexts
+
+There are three types of execution contexts:
+
+Global Execution Context (GEC) → created automatically when JS starts.
+
+Functional Execution Context (FEC) → created whenever a function is called.
+
+Eval Execution Context → rarely used, created when you use eval() (not common or recommended).
+
+🌍 1. Global Execution Context (GEC)
+
+When you run your JavaScript file, before anything happens, JS engine creates this GEC.
+
+It does two things:
+
+Creates a Global Memory Space (to store variables and function definitions)
+
+Creates a Global Object Reference (like window in browser or global in Node)
+
+Binds the this keyword to that global object.
+
+So:
+
+In Browser → this === window
+
+In Node → this === {} (in module scope), not global
+
+JS is single-threaded, meaning — it executes one line at a time, in one process.
+
+🧩 2. Functional Execution Context (FEC)
+
+Every time you call a function, JS creates a new execution context only for that function.
+
+That means the function has its own:
+
+Memory space (for local variables)
+
+this keyword
+
+Execution thread (temporarily, until it finishes)
+
+When the function finishes, its context is deleted and JS goes back to the previous one.
+
+🔁 Two Phases of Execution (for Every Context)
+
+Every execution context (global or function) goes through two main phases:
+
+1️⃣ Memory Creation Phase (a.k.a. Creation Phase)
+
+JS scans the code.
+
+All variables are declared and set to undefined.
+
+All functions are stored fully (not undefined).
+
+Example:
+
+let a = 10;
+let b = 11;
+
+function add(x, y) {
+  return x + y;
+}
+
+let result = add(a, b);
+
+
+During memory phase, JS engine stores:
+
+a → undefined
+b → undefined
+add → function reference
+result → undefined
+
+2️⃣ Execution Phase
+
+JS now runs line-by-line.
+
+Assigns values to variables.
+
+Executes functions when they are called.
+
+Step by step:
+
+a = 10
+b = 11
+result = add(a, b)
+
+
+Now when add(a,b) is called →
+a new Functional Execution Context is created.
+
+🧮 Inside the Function Execution Context (for add)
+
+When add(a, b) runs:
+
+Memory Phase:
+
+num1 → undefined
+num2 → undefined
+total → undefined
+
+
+Execution Phase:
+
+num1 = 10
+num2 = 11
+total = 21
+
+
+It returns 21 to the global execution context.
+
+The FEC is then destroyed (deleted from memory).
+
+Same process repeats for add(1,2).
+
+🧱 Call Stack (a.k.a. Execution Stack)
+
+All these execution contexts are managed by a structure called the “Call Stack.”
+
+It works on LIFO (Last In, First Out) —
+the last function that entered will be the first one to finish and leave.
+
+Example:
+function one() {
+  two();
+}
+function two() {
+  three();
+}
+function three() {}
+
+one();
+
+
+Step-by-step in Call Stack:
+
+Global context created first
+→ stack = [Global]
+
+one() called
+→ stack = [Global, one()]
+
+one() calls two()
+→ stack = [Global, one(), two()]
+
+two() calls three()
+→ stack = [Global, one(), two(), three()]
+
+three() finishes
+→ stack = [Global, one(), two()]
+
+two() finishes
+→ stack = [Global, one()]
+
+one() finishes
+→ stack = [Global]
+
+Program ends
+→ stack is empty
+
+🪞 So What’s Global Scope Doing Exactly?
+
+Global scope is:
+
+The base layer of all execution.
+
+Holds all top-level variables and functions.
+
+Passes a reference of this (which refers to the global object).
+
+Manages where function calls are stored and when they return.
+
+Once everything finishes, the GEC itself is cleared.
+
+🔑 Summary
+Concept	Meaning
+Execution Context	Environment where code runs
+Global Context	Created when file starts executing
+Function Context	Created whenever a function is called
+Eval Context	Created when using eval()
+Memory Phase	Variables = undefined, Functions stored
+Execution Phase	Code runs line-by-line
+Call Stack	Manages order of function execution (LIFO)
+this in GEC	Refers to global object (window/global)
+
+So in short:
+
+JavaScript doesn’t just “run code”.
+It builds an environment (Execution Context) for your file, then manages every function through a Call Stack, passing control step by step.
+The Global Context is the foundation — and this points to the environment where your file actually lives (window, global, etc.).

@@ -6,10 +6,26 @@ imp: (ya hoga he hoga)
 jab bhi js ka code run hine jaata hai tab uske global exectuion context baana ta hai
 jo vo kisi ko refre karta hai (this) keyword ko 
 
-browser ka globall execution context alag hota hai aur local env (node/bun/deno) ka alag hota hai
+browser ka globall execution context (GEC) alag hota hai aur local env (node/bun/deno) ka alag hota hai
+This GEC is like the “main environment” where your entire code lives until functions start getting called.
 browser uski value window object hota hai
 
 js single treaded hai sab ak process hota hai
+
+about this keyword:
+Because every environment (browser, Node, etc.) has its own global object that represents “the world” where your code runs.
+So the GEC automatically binds a special reference called this to that global object.
+That’s how your code can access global stuff even without importing it.
+
+ Why this Exists at All Here
+
+The reason JavaScript engine passes this reference into global scope is so that:
+You can access the global environment in your code.
+It allows compatibility with browser APIs or runtime-specific features.
+It creates a consistent structure for every execution context — every context has a this (global, function, class, etc.)
+That’s why:
+Every function you call creates a new execution context, and
+That context also gets its own this binding, depending on how the function is called.
 
 
 thin types ke execution context hota hai:
