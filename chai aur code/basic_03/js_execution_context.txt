@@ -1,0 +1,188 @@
+ javascript execution context 
+
+its mean apne jo bhi file banaya hai vo use run kaise kare ga
+
+imp: (ya hoga he hoga)
+jab bhi js ka code run hine jaata hai tab uske global exectuion context baana ta hai
+jo vo kisi ko refre karta hai (this) keyword ko 
+
+browser ka globall execution context alag hota hai aur local env (node/bun/deno) ka alag hota hai
+browser uski value window object hota hai
+
+js single treaded hai sab ak process hota hai
+
+
+thin types ke execution context hota hai:
+global exectuion context
+functional execution context
+eval exectuion context (porperty)
+
+code file do phase mai run karta hai:
+    -> memory creation (phase first cycle )(saare var ko aksth la ke rakha jaata hai) (sab varible ko sath laake use undefined assign kiya jaata hai)
+    -> execution phase
+
+
+eg:
+let a = 10;
+let b = 11;
+
+function add(num1,num2){
+    let total = num1 + num2;
+    return total
+}
+
+let add1 = add(a,b);
+let add2 = add(1,2);
+
+
+1) global scope -> this
+    -> explained above sab ka alaga alag hota hai
+
+2) memory stage
+    -> a = undefined
+    -> b = undefined
+    -> add = definition (no call only exist)
+    -> add1 = undefined
+    -> add2 = undefined
+
+3) execution phase
+    a = 10
+    b = 11
+    add = no execution in add function kuch kaam nhi hoga
+    add1 = add(a,b) => aab ya apne alag execution context baanata hai (jismai uska alag new envirement baane ga aur execution thread)
+
+            add1 => 1) memory stage:
+                        -> a = undefined
+                        -> b = undefined
+                        -> total = undefined ( can access var inside add function )
+                
+                    2) exectuion stage:
+                        -> a = 10
+                        -> b = 11
+                        -> total = 21 
+                        aab ya total gobal exectuion ke pas jaat hai 
+                    
+                    3) the env created by add1 gets deleted
+
+    add2 = add(1,2) => same kaam hoga
+                    (iska khud ka execution env baane ga)
+            add2 => 1) memory stage:
+                        -> a = undefined
+                        -> b = undefined
+                        -> total = undefined
+
+                    2) exectuion stage:
+                        -> a = 10
+                        -> b = 11
+                        -> total = 3
+                        aab ya total gobal exectuion ke pas jaat hai
+                    
+                    3) the env created by add2 gets deleted
+
+
+
+*********************************************************************************** call stack **************************************************************************
+
+call stack place where function get execute
+
+looks like |            |
+           |            |
+           |            |
+           |            |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+
+code eg:
+
+function one(){
+    two()
+}
+
+function two(){
+    three()
+}
+
+function three(){
+
+}
+
+one()
+
+how it will look in call stack its follow lifo method last in first out
+first the all other code will get ignore
+then it code to one()
+1) the one get inside the call stack
+           |            |
+           |   one()    |
+           |            |
+           |            |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+2) now the one is calling the two() function then that will go inside 
+           |            |
+           |    two()   |
+           |    one()   |
+           |            |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+3) now the two is calling the three() function then that will go inside 
+           |            |
+           |    three() |
+           |    two()   |
+           |    one()   |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+after the execution of three ends that will come out()
+           |            |
+           |    two()   |
+           |    one()   |
+           |            |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+once the execution of two ends two comes out
+           |            |
+           |   one()    |
+           |            |
+           |            |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+at last the exectuion of one end it will get out of stack
+
+           |            |
+           |            |
+           |            |
+           |            |
+           |            |
+           |            |
+           |------------|
+           |global scope|
+           |------------|
+
+at the end all the exectuion of function is done the stack gets empty
+
+
+
