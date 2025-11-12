@@ -1,0 +1,197 @@
+🧩 1. getElementById()
+
+👉 Used to select a single element by its unique id.
+
+<p id="msg">Hello Shivam!</p>
+<script>
+  const para = document.getElementById('msg');
+  console.log(para); // <p id="msg">Hello Shivam!</p>
+</script>
+
+🏷️ 2. .id and .className
+
+Used to get or set the id or class of an element.
+
+para.id;          // "msg"
+para.className;   // ""  (no class yet)
+
+para.className = "highlight"; // set class
+
+
+Result in DOM:
+
+<p id="msg" class="highlight">Hello Shivam!</p>
+
+🎯 3. getAttribute() and setAttribute()
+
+Used to access or modify any attribute of an element.
+
+<button id="btn" data-info="clickable">Press</button>
+<script>
+  const btn = document.getElementById('btn');
+
+  console.log(btn.getAttribute('data-info')); // "clickable"
+
+  btn.setAttribute('title', 'Click Me'); // add new attribute
+</script>
+
+
+Result:
+
+<button id="btn" data-info="clickable" title="Click Me">Press</button>
+
+🎨 4. .style
+
+Used to apply inline CSS styles directly via JS.
+
+btn.style.color = "red";
+btn.style.backgroundColor = "yellow";
+
+
+Result:
+
+<button style="color:red; background-color:yellow;">Press</button>
+
+
+⚠️ Note: .style modifies inline styles only, not external CSS classes.
+
+🧠 5. .textContent
+
+Gets or sets the raw text inside an element — even hidden ones (e.g., display: none).
+
+<div id="textDiv">
+  Hello <span style="display:none;">World</span>
+</div>
+
+<script>
+  const d = document.getElementById('textDiv');
+  console.log(d.textContent); // "Hello World"
+</script>
+
+
+✔️ Includes hidden text
+❌ No formatting (HTML tags ignored)
+
+🧾 6. .innerText
+
+Gets visible text only (respects CSS visibility and layout).
+
+console.log(d.innerText); // "Hello"
+
+
+✔️ Excludes hidden text (display:none)
+✔️ Includes line breaks visible on page
+❌ Slower (forces layout reflow)
+
+💡 Difference between innerText vs textContent
+Feature	innerText	textContent
+Includes hidden text	❌	✅
+Preserves formatting (line breaks)	✅	❌
+Reads visible text only	✅	❌
+Performance	Slower	Faster
+Use case	For user-visible text	For raw text extraction
+🧱 7. .innerHTML
+
+Gets or sets the HTML content inside an element (parsed as HTML).
+
+<div id="box"><p>Hello</p></div>
+<script>
+  const box = document.getElementById('box');
+  console.log(box.innerHTML); // "<p>Hello</p>"
+
+  box.innerHTML = "<b>Hi Shivam!</b>"; // replace content
+</script>
+
+
+Result:
+
+<div id="box"><b>Hi Shivam!</b></div>
+
+
+⚠️ Note: Replaces all inside content (not safe if inserting user input → XSS risk).
+
+🧩 8. .outerHTML
+
+Includes the element itself + its inner HTML.
+
+console.log(box.outerHTML);
+// "<div id='box'><b>Hi Shivam!</b></div>"
+
+
+If you reassign it, the element itself gets replaced:
+
+box.outerHTML = "<section>New</section>";
+
+🧭 9. getElementsByClassName()
+
+Selects all elements with a given class → returns HTMLCollection.
+
+<p class="fruit">Apple</p>
+<p class="fruit">Mango</p>
+
+<script>
+  const fruits = document.getElementsByClassName('fruit');
+  console.log(fruits); // HTMLCollection(2)
+  console.log(fruits[0].textContent); // Apple
+</script>
+
+
+⚠️ Live collection — updates automatically if DOM changes.
+
+🔍 10. querySelector() and querySelectorAll()
+
+Select elements using CSS selectors — the most flexible method.
+
+<div class="item">One</div>
+<div class="item">Two</div>
+
+<script>
+  const firstItem = document.querySelector('.item');
+  console.log(firstItem.textContent); // "One"
+
+  const allItems = document.querySelectorAll('.item');
+  console.log(allItems); // NodeList(2)
+</script>
+
+
+✅ querySelector() → returns first match
+✅ querySelectorAll() → returns NodeList (can use forEach())
+
+🧮 11. NodeList vs HTMLCollection
+Feature	NodeList	HTMLCollection
+Returned by	querySelectorAll()	getElementsByClassName(), getElementsByTagName()
+Type	Static (not live)	Live (auto-updates)
+forEach() supported	✅	❌ (in some browsers)
+Includes text nodes	Sometimes	Only element nodes
+Conversion to array	Array.from(list)	Array.from(collection)
+🔁 12. Array.from() (Convert Collection or NodeList to Array)
+const fruits = document.getElementsByClassName('fruit');
+const fruitArray = Array.from(fruits);
+
+fruitArray.map(f => console.log(f.textContent));
+
+
+Now you can use:
+
+.map()
+
+.filter()
+
+.reduce()
+
+✅ Full power of JavaScript arrays unlocked.
+
+⚡ Quick Summary Table
+Method / Property	Type	Returns	Description
+getElementById()	DOM Selector	Element	Select by ID
+.id, .className	Property	String	Get/set element’s id or class
+getAttribute(), setAttribute()	Attribute Access	Any	Get or modify HTML attributes
+.style	Property	Object	Inline CSS
+.textContent	Property	String	All text (even hidden)
+.innerText	Property	String	Visible text only
+.innerHTML	Property	String	HTML content inside
+.outerHTML	Property	String	Entire element HTML
+getElementsByClassName()	Selector	HTMLCollection	All elements with class
+querySelector()	Selector	Element	First match (CSS selector)
+querySelectorAll()	Selector	NodeList	All matches
+Array.from()	Converter	Array	Converts NodeList/Collection to Array

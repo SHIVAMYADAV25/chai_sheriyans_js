@@ -1,0 +1,191 @@
+🌳 DOM Tree Traversal & Manipulation
+
+We’ll use this base HTML to explain everything step by step 👇
+
+<body>
+  <div id="parent">
+    <h2>Heading</h2>
+    <p>First Paragraph</p>
+    <p>Second Paragraph</p>
+  </div>
+</body>
+
+🧩 1. parent.children
+
+➡ Returns all direct child elements (only element nodes, not text or comments).
+It’s an HTMLCollection.
+
+const parent = document.getElementById('parent');
+console.log(parent.children);
+
+
+Output:
+
+HTMLCollection(3) [h2, p, p]
+
+
+You can access:
+
+console.log(parent.children[0].textContent); // Heading
+console.log(parent.children[1].textContent); // First Paragraph
+
+🥇 2. firstElementChild and lastElementChild
+
+Get the first and last child element of a parent.
+
+console.log(parent.firstElementChild.textContent); // Heading
+console.log(parent.lastElementChild.textContent);  // Second Paragraph
+
+🧍‍♂️ 3. .parentElement
+
+Every element knows who its parent is.
+
+const para = parent.children[1]; // <p>First Paragraph</p>
+console.log(para.parentElement.id); // "parent"
+
+➡️ 4. .nextElementSibling and .previousElementSibling
+
+Move horizontally in the DOM — to next or previous elements on the same level.
+
+console.log(para.nextElementSibling.textContent); // Second Paragraph
+console.log(para.previousElementSibling.textContent); // Heading
+
+🌿 5. .childNodes vs .children
+
+This is where things get tricky (and important).
+
+childNodes
+
+Returns all node types (elements, text, comments).
+
+Includes invisible text nodes like line breaks (\n).
+
+Example:
+<div id="box">
+  <p>One</p>
+  <p>Two</p>
+</div>
+
+const box = document.getElementById('box');
+console.log(box.childNodes);
+
+
+Output (in console):
+
+NodeList(5) [#text, <p>, #text, <p>, #text]
+
+
+Why 5?
+
+#text (newline before first <p>)
+
+<p>One</p>
+
+#text (newline between)
+
+<p>Two</p>
+
+#text (newline after)
+
+⚠️ These #text nodes are just whitespace — they appear because of newlines or spaces in your HTML.
+
+✅ To get only elements, use .children instead:
+
+console.log(box.children);
+// HTMLCollection(2) [p, p]
+
+🧱 6. createTextNode() — Creating a text node manually
+
+Used when you want to create text safely (not as HTML).
+
+const newText = document.createTextNode(" → This is a new note.");
+
+
+It doesn’t appear yet — we must attach it to something using appendChild().
+
+🧩 7. appendChild() — Add new element/text at the end
+
+Let’s create a new paragraph and append text to it 👇
+
+const newPara = document.createElement('p'); // create <p>
+const text = document.createTextNode('This is a new paragraph.');
+newPara.appendChild(text); // <p>This is a new paragraph.</p>
+
+parent.appendChild(newPara);
+
+
+✅ Resulting DOM:
+
+<div id="parent">
+  <h2>Heading</h2>
+  <p>First Paragraph</p>
+  <p>Second Paragraph</p>
+  <p>This is a new paragraph.</p>
+</div>
+
+✏️ 8. innerText → get value → override value
+
+You can read and change an element’s visible text easily.
+
+const head = parent.firstElementChild;
+console.log(head.innerText); // "Heading"
+
+head.innerText = "Updated Heading!"; // override
+
+
+✅ DOM now:
+
+<h2>Updated Heading!</h2>
+
+🧠 9. Complete Example (Traversal + Manipulation)
+<div id="container">
+  <h3>Title</h3>
+  <p>Line 1</p>
+  <p>Line 2</p>
+</div>
+
+<script>
+  const box = document.getElementById('container');
+
+  console.log(box.children.length); // 3
+
+  // Access first and last elements
+  console.log(box.firstElementChild.textContent); // Title
+  console.log(box.lastElementChild.textContent);  // Line 2
+
+  // Create new node
+  const newP = document.createElement('p');
+  newP.textContent = "New Line 3";
+  box.appendChild(newP);
+
+  // Traverse siblings
+  const secondPara = box.children[2]; // Line 2
+  console.log(secondPara.previousElementSibling.textContent); // Line 1
+  console.log(secondPara.nextElementSibling.textContent);     // New Line 3
+
+  // Change text
+  box.firstElementChild.innerText = "Modified Title";
+</script>
+
+
+✅ Final DOM:
+
+<div id="container">
+  <h3>Modified Title</h3>
+  <p>Line 1</p>
+  <p>Line 2</p>
+  <p>New Line 3</p>
+</div>
+
+🧾 Summary Table
+Property / Method	Returns	Description
+.children	HTMLCollection	Only element children
+.childNodes	NodeList	Includes text nodes (#text)
+.firstElementChild	Element	First child element
+.lastElementChild	Element	Last child element
+.parentElement	Element	Parent of the node
+.nextElementSibling	Element	Next sibling on same level
+.previousElementSibling	Element	Previous sibling
+.createTextNode()	Node	Creates text-only node
+.appendChild()	Node	Appends new element/text
+.innerText	String	Get/Set visible text
