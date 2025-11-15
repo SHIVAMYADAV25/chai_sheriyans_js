@@ -29,19 +29,7 @@
 // in sync the file read is done and all other task are waiting to complete it
 // in async the file read is done side by side all the other task is done
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// **************************************************************EXECUTION****************************************************************************
 
 // line of code is written in file and it execute like :
 // first : goes in callstack it execute checks that there is and
@@ -50,6 +38,9 @@
 // then this register call back give the code to the task queue is follows the lifo method and give the execution of code to 
 // call stack at the top and then it execute immediately (bc it follow FIFO method)
 
+// eg: 1 , (run 2 after 0 second) , 3
+// then the o/p will be 1 , 3 and 2 because 2 goes from all the process above given 
+// call stack -> WEB API -> register call back > task queue -> then call stack
 
 // there only diff with fetch is that it uses the priority queue rather than task queue
 // priority queue is use promise resolve or fail kinda thing 
