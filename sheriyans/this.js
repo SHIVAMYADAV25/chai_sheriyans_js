@@ -47,3 +47,5 @@ let div = document.getElementById("div");
 div.addEventListener("click",()=>{
     console.log(this)
 })
+
+// settimeout mai this ki value will be window(because it is glabal function)
