@@ -1,0 +1,296 @@
+https://chatgpt.com/s/t_693e401fd1508191bd990c50d4e0d8c9
+1️⃣ Event Loop (REAL CORE)
+
+If you don’t understand this, everything async is guesswork.
+
+What it controls
+
+Call Stack
+
+Microtask Queue (Promises, await)
+
+Macrotask Queue (setTimeout, setInterval, I/O)
+
+console.log("A");
+
+setTimeout(() => console.log("B"), 0);
+
+Promise.resolve().then(() => console.log("C"));
+
+console.log("D");
+
+
+Output:
+
+A
+D
+C
+B
+
+
+Why interviewers care:
+This proves you know how JS actually runs, not just syntax.
+
+2️⃣ Microtasks vs Macrotasks (VERY IMPORTANT)
+Type	Examples	Priority
+Microtask	Promise.then, await, queueMicrotask	🔥 High
+Macrotask	setTimeout, setInterval, I/O	Low
+
+Microtasks always finish first before moving on.
+
+3️⃣ Promise Internals (State + Immutability)
+
+Once a Promise is:
+
+fulfilled ❌ cannot reject later
+
+rejected ❌ cannot resolve later
+
+const p = new Promise((resolve, reject) => {
+  resolve("done");
+  reject("error"); // ignored
+});
+
+
+This immutability is design, not limitation.
+
+4️⃣ Promise Combinators (Advanced Usage)
+Promise.all vs allSettled vs any vs race
+
+Real-world:
+
+all → login flow (all must succeed)
+
+allSettled → analytics + logging
+
+race → timeout implementation
+
+any → CDN fallback
+
+Promise.race([
+  fetch(url),
+  timeout(3000)
+]);
+
+5️⃣ Async Control Flow Patterns
+Sequential
+await task1();
+await task2();
+
+Parallel
+await Promise.all([task1(), task2()]);
+
+Limited concurrency (advanced)
+// run only N at a time (interview-level concept)
+
+
+Used in:
+
+File uploads
+
+API rate limits
+
+Crawlers
+
+6️⃣ Cancellation (AbortController)
+
+Promises cannot be cancelled — this is intentional.
+
+Modern solution:
+
+const controller = new AbortController();
+
+fetch(url, { signal: controller.signal });
+
+controller.abort();
+
+
+Used in:
+
+Search autocomplete
+
+Page navigation
+
+Streaming APIs
+
+7️⃣ Async Iteration (for await...of)
+
+Used for:
+
+Streams
+
+Large datasets
+
+Chunked APIs
+
+for await (const chunk of stream) {
+  process(chunk);
+}
+
+
+This is not beginner JS.
+
+8️⃣ Async Generators (VERY ADVANCED)
+async function* fetchPages() {
+  yield await fetchPage(1);
+  yield await fetchPage(2);
+}
+
+
+Used in:
+
+Pagination
+
+Streaming data
+
+Backpressure systems
+
+9️⃣ queueMicrotask (Hidden Gem)
+queueMicrotask(() => {
+  console.log("runs before setTimeout");
+});
+
+
+Lower-level control than Promises.
+
+Used in:
+
+Framework internals
+
+Scheduling logic
+
+Performance tuning
+
+🔟 Unhandled Promise Rejections (Production Bug)
+async function test() {
+  throw "error";
+}
+test();
+
+
+Node will warn or crash.
+
+Production-safe:
+
+process.on("unhandledRejection", handler);
+
+
+This separates hobbyists from professionals.
+
+1️⃣1️⃣ Async Stack Traces (Debugging Skill)
+
+Without async/await:
+
+Broken stack traces
+
+With async/await:
+
+Clean, readable traces
+
+One reason async/await was added.
+
+1️⃣2️⃣ Race Conditions (Real-World Failure)
+let data;
+
+async function load() {
+  data = await fetchData();
+}
+
+
+Two calls → overwriting state.
+
+Fix:
+
+Locking
+
+Debouncing
+
+Cancellation
+
+1️⃣3️⃣ Throttling & Debouncing (Async Timing Control)
+
+Used in:
+
+Search boxes
+
+Scroll listeners
+
+Resize handlers
+
+Async doesn’t mean uncontrolled.
+
+1️⃣4️⃣ Streams vs Promises (Architectural)
+Feature	Promise	Stream
+Single value	✅	❌
+Multiple chunks	❌	✅
+Memory efficient	❌	✅
+
+Used in:
+
+Video
+
+Large file processing
+
+1️⃣5️⃣ Workers & Off-Main-Thread Async
+
+Async ≠ Multithreading
+
+True parallelism:
+
+Web Workers
+
+Worker Threads (Node)
+
+Promises don’t give parallel CPU execution.
+
+1️⃣6️⃣ Observables (Beyond Promises)
+
+Used in:
+
+Angular
+
+RxJS
+
+Real-time systems
+
+Promises:
+
+One value
+
+Observables:
+
+Many values over time
+
+1️⃣7️⃣ Async Design Philosophy (INTERVIEW GOLD)
+
+Good async code:
+
+Explicit concurrency
+
+Predictable error handling
+
+Cancellation-aware
+
+Backpressure-safe
+
+Bad async code:
+
+Nested awaits
+
+Silent failures
+
+Race conditions
+
+🔥 Advanced Interview One-Liners
+
+Memorize these:
+
+“Promises use the microtask queue.”
+
+“async/await doesn’t make code parallel.”
+
+“Promises can’t be cancelled by design.”
+
+“Streams solve memory pressure.”
+
+“Workers are needed for CPU-bound tasks.”
