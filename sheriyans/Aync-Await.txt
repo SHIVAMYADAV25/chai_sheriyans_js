@@ -1,0 +1,258 @@
+https://chatgpt.com/s/t_693e3f48534c8191b7f47af4868d521c
+
+
+1️⃣ Why async / await Exists (Reality Check)
+
+Before async/await, we wrote this:
+
+fetchUser()
+  .then(user => fetchPosts(user.id))
+  .then(posts => fetchComments(posts[0].id))
+  .catch(err => console.error(err));
+
+
+This is correct, but:
+
+Hard to debug
+
+Stack traces are ugly
+
+Mentally exhausting for complex logic
+
+async/await was introduced to make async code look synchronous — NOT to change how it works.
+
+2️⃣ What async REALLY Does
+async function getData() {}
+
+Facts (interview-critical)
+
+async function always returns a Promise
+
+Even if you return a normal value
+
+Even if there is no return
+
+async function foo() {
+  return 10;
+}
+
+foo(); // Promise<10>
+
+
+Equivalent:
+
+function foo() {
+  return Promise.resolve(10);
+}
+
+
+⚠️ This is not optional behavior.
+
+3️⃣ What await REALLY Does (No Myths)
+const data = await fetchData();
+
+What actually happens:
+
+JS pauses execution of that function
+
+JS does NOT block the thread
+
+Control returns to event loop
+
+When Promise resolves → function resumes
+
+Interview line:
+
+"await pauses the async function, not the JavaScript engine."
+
+4️⃣ async/await Is Just Promises (Proof)
+async function test() {
+  const a = await Promise.resolve(1);
+  const b = await Promise.resolve(2);
+  return a + b;
+}
+
+
+Is internally equivalent to:
+
+function test() {
+  return Promise.resolve(1)
+    .then(a => Promise.resolve(2)
+      .then(b => a + b)
+    );
+}
+
+
+👉 Same microtasks, same event loop behavior.
+
+5️⃣ Error Handling with async/await (VERY IMPORTANT)
+Wrong way
+async function getData() {
+  const data = await fetchData(); // if fails → unhandled rejection
+}
+
+Correct way
+async function getData() {
+  try {
+    const data = await fetchData();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+Key rule
+
+await throws if Promise rejects
+
+try/catch handles it
+
+No .catch() needed inside async function
+
+6️⃣ Sequential vs Parallel Execution (Big Trap)
+❌ Sequential (slow)
+const a = await fetchA();
+const b = await fetchB();
+
+✅ Parallel (fast)
+const [a, b] = await Promise.all([
+  fetchA(),
+  fetchB()
+]);
+
+
+Interview question:
+
+“Does async/await make code parallel?”
+Answer:
+❌ No. It makes it sequential unless you explicitly run Promises together.
+
+7️⃣ await Outside async (Top-Level Await)
+Old rule
+await fetchData(); // ❌ Syntax error
+
+Modern JS (ES2022+ modules)
+const data = await fetchData(); // ✅ allowed in modules
+
+
+Used in:
+
+Node.js ES modules
+
+Modern bundlers
+
+Config files
+
+8️⃣ forEach + async = BUG FACTORY
+array.forEach(async item => {
+  await process(item);
+});
+
+
+Why this is wrong:
+
+forEach does NOT wait
+
+Errors are swallowed
+
+Execution order is broken
+
+Correct patterns
+Sequential
+for (const item of array) {
+  await process(item);
+}
+
+Parallel
+await Promise.all(array.map(process));
+
+9️⃣ async Inside Callbacks (Hidden Bug)
+setTimeout(async () => {
+  await doWork();
+}, 1000);
+
+
+If doWork() fails → unhandled rejection
+
+Fix:
+
+setTimeout(() => {
+  (async () => {
+    try {
+      await doWork();
+    } catch (e) {
+      console.error(e);
+    }
+  })();
+}, 1000);
+
+🔟 Event Loop + async/await (Advanced)
+console.log("start");
+
+async function test() {
+  console.log("inside");
+  await Promise.resolve();
+  console.log("after await");
+}
+
+test();
+console.log("end");
+
+
+Output:
+
+start
+inside
+end
+after await
+
+
+Why?
+
+await schedules continuation in microtask queue
+
+Microtasks run after sync code, before macrotasks
+
+This is pure interview gold.
+
+1️⃣1️⃣ Common Interview Traps
+Q: Does await block the thread?
+
+❌ No
+✔️ It only pauses the async function
+
+Q: Can you use await without async?
+
+❌ No (except top-level modules)
+
+Q: What does an async function return?
+
+✔️ Always a Promise
+
+Q: Difference between .then() and await?
+
+✔️ Syntax only, behavior is identical
+
+1️⃣2️⃣ When NOT to Use async/await
+
+When you need streams / multiple values → Observables
+
+When cancellation is critical → AbortController + Promises
+
+Inside performance-critical loops (careless use slows code)
+
+1️⃣3️⃣ One-Line Definitions (Memorize)
+
+async → wraps return value in a Promise
+
+await → pauses function, not the engine
+
+Errors → thrown, not passed
+
+Parallelism → manual, not automatic
+
+Final Truth (No Sugarcoating)
+
+Most developers use async/await blindly.
+Good developers understand Promises.
+Great developers understand the event loop behind it.
